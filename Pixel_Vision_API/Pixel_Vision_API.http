@@ -1,7 +1,6 @@
 @Pixel_Vision_API_HostAddress = http://localhost:5015
 
 GET {{Pixel_Vision_API_HostAddress}}/weatherforecast/
-# Accept: application/json
-Deny:application/json
+Accept: application/json
 
 ###
