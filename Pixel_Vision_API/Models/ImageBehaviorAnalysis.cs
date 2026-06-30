@@ -4,14 +4,14 @@ namespace Pixel_Vision_API.Models
 {
     public class ImageBehaviorAnalysis
     {
-        //[Key]
+        [Key]
         public int Id { get; set; }
-        //public int StudentId { get; set; } = 0;
+        public int StudentId { get; set; } // Ahmed (student)
         public string ImageUrl { get; set; } = null!;
         public string Behavior { get; set; } = null!;
         public double Confidence { get; set; }
         public string Source { get; set; } = null!;
-        //public User? Student { get; set; }
+        public User? Student { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 

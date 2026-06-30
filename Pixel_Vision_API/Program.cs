@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pixel_Vision_API.Data;
+using Pixel_Vision_API.Models;
 using Pixel_Vision_API.Repository;
 using Pixel_Vision_API.Repository.IRepository;
 using Pixel_Vision_API.Services;
@@ -17,7 +18,19 @@ namespace Pixel_Vision_API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
+            // Add CORS services
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {
+                        policy
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
             {
@@ -31,7 +44,11 @@ namespace Pixel_Vision_API
             builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
             builder.Services.AddScoped<IImageRepository, ImageRepository>();
             builder.Services.AddScoped<IParentStudentRepository, ParentStudentRepository>();
+            builder.Services.AddScoped<IWeeklyReportRepository,WeeklyReportRepository>();
             builder.Services.AddScoped<IMlService, MlService>();
+            builder.Services.AddScoped<IRiskCalculatorService, RiskCalculatorService>();
+            builder.Services.AddScoped<IQuizAIPredictionRepository, QuizAIPredictionRepository>();
+            builder.Services.AddScoped<IStudentAnalysisRepository, StudentAnalysisRepository>();
             //builder.Services.AddHttpClient<IMlService, MlService>();
 
             builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -44,6 +61,31 @@ namespace Pixel_Vision_API
             builder.Services.AddHttpClient("ImageAiService", client =>
             {
                 client.BaseAddress = new Uri("https://mostafaelshahat1-behaviormodel.hf.space/predict-universal"); // FastAPI URL
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+            builder.Services.AddHttpClient("ViolenceAiService", client =>
+            {
+                client.BaseAddress = new Uri(""); // FastAPI URL
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+            builder.Services.AddHttpClient("EmotionAiService", client =>
+            {
+                client.BaseAddress = new Uri("https://mostafaelshahat1-emotion-detection-yolo.hf.space/analyze"); // FastAPI URL
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+            builder.Services.AddHttpClient("recognition", client =>
+            {
+                client.BaseAddress = new Uri("https://ahmed-nn-face-recognition-api.hf.space/analyze"); // FastAPI URL
+                client.Timeout = TimeSpan.FromMinutes(2);
+            });
+            builder.Services.AddHttpClient("emotion", client =>
+            {
+                client.BaseAddress = new Uri("https://mostafaelshahat1-emotion-detection-yolo.hf.space/analyze"); // FastAPI URL
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+            builder.Services.AddHttpClient("behavior", client =>
+            {
+                client.BaseAddress = new Uri("https://mostafaelshahat1-behaviormodel.hf.space/predict"); // FastAPI URL
                 client.Timeout = TimeSpan.FromSeconds(30);
             });
 
@@ -109,10 +151,13 @@ namespace Pixel_Vision_API
 
             var app = builder.Build();
 
+            // Enable CORS
+            app.UseCors("AllowAll");
+
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())
             //{
-                app.UseSwagger();
+            app.UseSwagger();
                 app.UseSwaggerUI();
             //}
 

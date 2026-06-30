@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Pixel_Vision_API.Models;
 using Pixel_Vision_API.Models.DTOs.ParentStudntDTOs;
+using Pixel_Vision_API.Models.DTOs.ReportDTOs;
 using Pixel_Vision_API.Models.DTOs.RoleDTOs;
 using Pixel_Vision_API.Models.DTOs.UserDTOs;
 
@@ -19,6 +20,10 @@ namespace Pixel_Vision_API
             CreateMap<User, UserUpdateDto>().ReverseMap();
             
             CreateMap<ParentStudent, ParentStudentDto>().ReverseMap();
+
+            CreateMap<WeeklyReport, ReportDto>().ReverseMap();
+
+
         }
     }
 }

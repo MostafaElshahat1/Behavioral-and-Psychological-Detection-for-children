@@ -3,8 +3,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pixel_Vision_API.Models;
 using Pixel_Vision_API.Models.DTOs.ParentStudntDTOs;
+using Pixel_Vision_API.Repository;
 using Pixel_Vision_API.Repository.IRepository;
 
 namespace Pixel_Vision_API.Controllers
@@ -24,8 +26,33 @@ namespace Pixel_Vision_API.Controllers
             this._mapper = _mapper;
             _response = new();
         }
-        [HttpPost("link")]
+        [HttpGet("linked-parents-students")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize(Roles = "admin,owner")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> GetAllParentStudents()
+        {
+            try
+            {
+                List<ParentStudent> userList = await _parentStudentRepo.GetAllAsync(includeProperties: "Student");
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = userList;
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpPost("link")]
+        [Authorize(Roles = "admin,owner,parent")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -40,7 +67,7 @@ namespace Pixel_Vision_API.Controllers
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
                     _response.ErrorMessages = new List<string>() { "Invalid ID..!" };
-                    return NotFound(_response);
+                    return BadRequest(_response);
                 }
                 // check validation of Ids
                 var parent = await _userRepo.GetAsync(u => u.ID == parentStudentDto.ParentId && u.Role.RoleName == "parent", includeProperties: "Role", tracked: false);
@@ -63,6 +90,45 @@ namespace Pixel_Vision_API.Controllers
                 await _parentStudentRepo.CreateAsync(parentStudentModel);
                 _response.StatusCode = HttpStatusCode.Created;
                 _response.Result = new { message = "Linked Successfully", parentStudentDto };
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.Message };
+            }
+            return StatusCode(500, _response);
+        }
+
+        [HttpGet("student-by-parent/{parentId}")]
+        public async Task<ActionResult<APIResponse>> GetStudentByParentId(int parentId)
+        {
+            try
+            {
+
+                if (parentId <= 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages = new List<string>() { "Invalid ID..!" };
+                    return BadRequest(_response);
+                }
+                var student = await _parentStudentRepo.GetAsync(s => s.ParentId == parentId);
+            
+                if (student == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages = new List<string>() { "Id Not Found..!" };
+                    return NotFound(_response);
+                }
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = new
+                {
+                    ParentId = student.ParentId,
+                    StudentId = student.StudentId
+                };
                 return Ok(_response);
             }
             catch (Exception ex)

@@ -20,9 +20,26 @@ namespace Pixel_Vision_API.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<ImageBehaviorAnalysis> ImageBehaviorAnalyses{ get; set; }
         public DbSet<QuizAIPrediction> QuizAIPredictions { get; set; }
+        public DbSet<WeeklyReport> WeeklyReports { get; set; }
+        public DbSet<ApprovedReport> ApprovedReports { get; set; }
+        public DbSet<EmotionDetection> EmotionDetections { get; set; }
+        public DbSet<VideoDetection> VideoDetections { get; set; }
+        public DbSet<StudentAnalysis> StudentAnalyses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<WeeklyReport>()
+            .Property(x => x.RowVersion)
+            .IsRowVersion();
+            // to avoid dublicate same std on the same week on database level
+            modelBuilder.Entity<WeeklyReport>()
+            .HasIndex(r => new
+            {
+                r.StudentId,
+                r.WeekNumber
+            })
+            .IsUnique();
+
             modelBuilder.Entity<Question>()
                 .HasIndex(q => q.FeatureKey)
                 .IsUnique();

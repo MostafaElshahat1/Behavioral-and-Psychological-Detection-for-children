@@ -27,6 +27,7 @@ namespace Pixel_Vision_API.Controllers
 
 
         [HttpPost("register")] // will throw exception if the role Id is greater than the max role_id
+        [Authorize(Roles = "admin,owner")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -42,7 +43,8 @@ namespace Pixel_Vision_API.Controllers
                     _response.ErrorMessages = new List<string>() { "Non Nullable Entity ..!" };
                     return BadRequest(_response);
                 }
-                if (userCreateDto.RoleID == 1 || userCreateDto.RoleID == 3)
+                //if (userCreateDto.RoleID == 1 || userCreateDto.RoleID == 3)
+                if (userCreateDto.RoleID == 3)
                 {
                     _response.StatusCode = HttpStatusCode.Unauthorized;
                     _response.IsSuccess = false;
@@ -102,9 +104,11 @@ namespace Pixel_Vision_API.Controllers
                     return BadRequest(_response);
                 }
                 _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = new { 
-                    Message="You logged in successfully.",
-                    Token = loginResponse.Token
+                _response.Result = new {
+                    Message = "You logged in successfully.",
+                    Token = loginResponse.Token,
+                    Role = loginResponse.User.Role.RoleName,
+                    UserId = loginResponse.User.ID
                 };
                 return Ok(_response);
             }

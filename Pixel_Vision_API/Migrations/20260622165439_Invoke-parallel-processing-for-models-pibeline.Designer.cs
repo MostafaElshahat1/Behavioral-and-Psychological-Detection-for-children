@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pixel_Vision_API.Data;
 
@@ -11,9 +12,11 @@ using Pixel_Vision_API.Data;
 namespace Pixel_Vision_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260622165439_Invoke-parallel-processing-for-models-pibeline")]
+    partial class Invokeparallelprocessingformodelspibeline
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -453,9 +456,6 @@ namespace Pixel_Vision_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AngryCount")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ApprovedAt")
                         .HasColumnType("datetime2");
 
@@ -465,16 +465,10 @@ namespace Pixel_Vision_API.Migrations
                     b.Property<int>("HandRaisedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("HappyCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("LookingBackCount")
                         .HasColumnType("int");
 
                     b.Property<int>("LookingForwardCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NeutralCount")
                         .HasColumnType("int");
 
                     b.Property<int>("ReadingCount")
@@ -494,9 +488,6 @@ namespace Pixel_Vision_API.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<int>("SadCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("SleepingCount")
                         .HasColumnType("int");
 
@@ -510,9 +501,6 @@ namespace Pixel_Vision_API.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SurpriseCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("TotalImages")
                         .HasColumnType("int");
 
@@ -523,9 +511,6 @@ namespace Pixel_Vision_API.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId", "WeekNumber")
-                        .IsUnique();
 
                     b.ToTable("WeeklyReports");
                 });

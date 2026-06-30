@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pixel_Vision_API.Data;
 
@@ -11,9 +12,11 @@ using Pixel_Vision_API.Data;
 namespace Pixel_Vision_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260217131211_add_report_functionality")]
+    partial class add_report_functionality
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,8 +39,9 @@ namespace Pixel_Vision_API.Migrations
                     b.Property<int>("QuizSubmissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -46,97 +50,6 @@ namespace Pixel_Vision_API.Migrations
                     b.HasIndex("QuizSubmissionId");
 
                     b.ToTable("Answers");
-                });
-
-            modelBuilder.Entity("Pixel_Vision_API.Models.ApprovedReport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("ApprovedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("AvgConfidence")
-                        .HasColumnType("float");
-
-                    b.Property<int>("HandRaisedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LookingBackCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LookingForwardCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReadingCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RiskLevel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SleepingCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StandingCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalImages")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeekNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeeklyReportId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WrittingCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ApprovedReports");
-                });
-
-            modelBuilder.Entity("Pixel_Vision_API.Models.EmotionDetection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Confidence")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Emotion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("H")
-                        .HasColumnType("int");
-
-                    b.Property<int>("W")
-                        .HasColumnType("int");
-
-                    b.Property<int>("X")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Y")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmotionDetections");
                 });
 
             modelBuilder.Entity("Pixel_Vision_API.Models.ImageBehaviorAnalysis", b =>
@@ -190,8 +103,9 @@ namespace Pixel_Vision_API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -282,15 +196,26 @@ namespace Pixel_Vision_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<bool>("InterventionNeeded")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("risk_level")
+                    b.Property<double>("ProbabilityScore")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Recommendation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("risk_score")
-                        .HasColumnType("float");
+                    b.Property<int>("RiskId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RiskLabel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -338,43 +263,6 @@ namespace Pixel_Vision_API.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Pixel_Vision_API.Models.StudentAnalysis", b =>
-                {
-                    b.Property<int>("AnalysisId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnalysisId"));
-
-                    b.Property<string>("Behavior")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("BehaviorConfidence")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Emotion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("EmotionConfidence")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AnalysisId");
-
-                    b.ToTable("StudentAnalyses");
-                });
-
             modelBuilder.Entity("Pixel_Vision_API.Models.User", b =>
                 {
                     b.Property<int>("ID")
@@ -415,36 +303,6 @@ namespace Pixel_Vision_API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Pixel_Vision_API.Models.VideoDetection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("NonViolancePercentage")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ViolancePercentage")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VideoDetections");
-                });
-
             modelBuilder.Entity("Pixel_Vision_API.Models.WeeklyReport", b =>
                 {
                     b.Property<int>("Id")
@@ -453,36 +311,14 @@ namespace Pixel_Vision_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AngryCount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ApprovedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<double>("AvgConfidence")
                         .HasColumnType("float");
 
                     b.Property<int>("HandRaisedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("HappyCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("LookingBackCount")
                         .HasColumnType("int");
-
-                    b.Property<int>("LookingForwardCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NeutralCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReadingCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Recomendation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RiskLevel")
                         .IsRequired()
@@ -494,13 +330,7 @@ namespace Pixel_Vision_API.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<int>("SadCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("SleepingCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StandingCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -510,22 +340,13 @@ namespace Pixel_Vision_API.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SurpriseCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("TotalImages")
                         .HasColumnType("int");
 
                     b.Property<int>("WeekNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("WrittingCount")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId", "WeekNumber")
-                        .IsUnique();
 
                     b.ToTable("WeeklyReports");
                 });

@@ -8,7 +8,7 @@ namespace Pixel_Vision_API.Models.DTOs.AnswerDTOs
         public int QuestionId { get; set; }
 
         //[Range(0, 3)]
-        public string Value { get; set; }
+        public int Value { get; set; }
     }
 
 }

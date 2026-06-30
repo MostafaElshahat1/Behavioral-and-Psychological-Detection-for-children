@@ -9,7 +9,7 @@ namespace Pixel_Vision_API.Models.DTOs.OptionDTOs
         public string Text { get; set; } = null!;
 
         //[Range(0, 10)]
-        public string Value { get; set; }
+        public int Value { get; set; }
     }
 
 }

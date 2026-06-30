@@ -37,6 +37,7 @@ namespace Pixel_Vision_API.Controllers
             _response = new();
         }
 
+
         [HttpGet("{quizId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -163,6 +164,7 @@ namespace Pixel_Vision_API.Controllers
                         FeatureKey = questionFeatureMap[a.QuestionId]
                     }).ToList()
                 };
+
 
 
                 return Ok(new APIResponse

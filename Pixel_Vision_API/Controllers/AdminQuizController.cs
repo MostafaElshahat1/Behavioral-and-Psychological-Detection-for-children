@@ -22,13 +22,40 @@ namespace Pixel_Vision_API.Controllers
     public class AdminQuizController : ControllerBase
     {
         private readonly IQuizRepository _quizRepo;
+        private readonly IQuizAIPredictionRepository _quizAiPredictionRepo;
         private readonly APIResponse _response;
 
-        public AdminQuizController(IQuizRepository quizRepo)
+        public AdminQuizController(IQuizAIPredictionRepository _quizAiPredictionRepo, IQuizRepository quizRepo)
         {
+            this._quizAiPredictionRepo = _quizAiPredictionRepo;
             _quizRepo = quizRepo;
             _response = new();
         }
+
+        [HttpGet("analyses")]
+        [Authorize(Roles = "admin,owner")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> GetAllAnalyses()
+        {
+            try
+            {
+                var quizPredictionList = await _quizAiPredictionRepo.GetAllAsync();
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = quizPredictionList;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.Message };
+            }
+            return StatusCode(500, _response);
+        }
+
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
