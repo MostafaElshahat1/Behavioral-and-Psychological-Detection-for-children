@@ -1,0 +1,37 @@
+<div class="page-container">
+
+  <app-navbar [pageTitle]="profileTitle()"></app-navbar>
+
+  <app-back-button class="mt-3"></app-back-button>
+
+  @if (isLoading()) {
+    <app-spinner message="Loading Profile...."></app-spinner>
+  }
+  @else if (errorMessage()) {
+    <div class="alert-error">{{ errorMessage() }}</div>
+  }
+  @else {
+
+    <div class="profile-grid">
+
+      <div class="profile-column">
+        <h3 class="column-title">Identity</h3>
+        <app-profile-overview
+          [user]="viewedUser()"
+          [relatedUser]="relatedUser()"
+          [relationLabel]="relationLabel()">
+        </app-profile-overview>
+      </div>
+
+      @if (isStudent()) {
+        <div class="profile-column">
+          <h3 class="column-title">Activity</h3>
+          <app-profile-activity [studentId]="viewedUser()!.id"></app-profile-activity>
+        </div>
+      }
+
+    </div>
+
+  }
+
+</div>
