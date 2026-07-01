@@ -1,0 +1,76 @@
+<div class="page-container">
+  <app-navbar pageTitle="Dashboard"></app-navbar>
+
+  @if (isLoading()) {
+    <app-spinner class="loading-text">Loading dashboard...</app-spinner>
+  } @else {
+    <div class="dashboard-grid">
+
+      <div class="main-column">
+
+        <div class="stat-cards-row">
+          <app-stat-card
+            icon="bi-people-fill"
+            color="blue"
+            label="Total Students"
+            [value]="totalStudents()">
+          </app-stat-card>
+
+          <app-stat-card
+            icon="bi-shield-exclamation"
+            color="red"
+            label="Incidents (This Week)"
+            [value]="incidentsThisWeek()">
+          </app-stat-card>
+
+          <app-stat-card
+            icon="bi-file-earmark-text"
+            color="green"
+            label="Reports"
+            [value]="totalReports()"
+            [subLabel]="pendingReports() + ' Pending'"
+            subClass="pending">
+          </app-stat-card>
+        </div>
+
+        <div class="charts-row">
+          <app-incidents-trend-chart
+            [trendLinePoints]="trendLinePoints()"
+            [trendAreaPoints]="trendAreaPoints()"
+            [trendDots]="trendDots()"
+            [weekDays]="weekDays"
+            [yAxisLabels]="yAxisLabels()">
+          </app-incidents-trend-chart>
+
+          <app-risk-distribution-chart
+            [distribution]="riskDistribution()"
+            [gradient]="donutGradient()">
+          </app-risk-distribution-chart>
+        </div>
+
+        <div class="lists-row">
+          <app-recent-incidents-list [incidents]="recentIncidents()"></app-recent-incidents-list>
+          <app-recent-reports-list [reports]="recentReports()"></app-recent-reports-list>
+        </div>
+
+        <div class="lists-row">
+          <app-top-high-risk-students [students]="topHighRiskStudents()"></app-top-high-risk-students>
+          <app-quizzes-preview-list [quizzes]="recentQuizzes()"></app-quizzes-preview-list>
+        </div>
+      </div>
+
+      <div class="sidebar-column">
+        <app-ai-school-health-card
+          [overallHealth]="overallHealth()"
+          [healthLabel]="healthLabel()"
+          [averageEmotion]="averageEmotion()"
+          [mostDetectedBehavior]="mostDetectedBehavior()"
+          [studentsNeedingAttention]="studentsNeedingAttention()">
+        </app-ai-school-health-card>
+
+        <app-quick-actions></app-quick-actions>
+      </div>
+
+    </div>
+  }
+</div>
