@@ -1,0 +1,11 @@
+<div style="display: flex;">
+
+  @if (router.url !== '/login' && router.url !== '/') {
+    <app-sidebar></app-sidebar>
+  }
+
+  <main style="flex-grow: 1; background-color: #f5f6fa; min-height: 100vh;">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

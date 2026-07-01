@@ -1,0 +1,33 @@
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.column-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0 0 14px 4px;
+}
+
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.profile-grid:has(> :only-child) {
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+
+.profile-grid:has(> :only-child) .profile-card {
+  max-width: 900px; /* or whatever feels right, instead of 600px */
+}
+.profile-grid.single-column {
+  grid-template-columns: 1fr;
+  display: block;
+  width: 100%;
+}
+
