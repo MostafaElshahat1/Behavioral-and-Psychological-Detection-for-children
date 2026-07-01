@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+python-multipart
+requests
+tensorflow-cpu==2.15.0
+opencv-python-headless
+numpy
